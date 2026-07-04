@@ -6,6 +6,7 @@
    실행: node scripts/generate.mjs
    ========================================================================== */
 import { REGIONS, GUS, PHONE, TELEGRAM, ORIGIN } from "../data/seoul.js";
+import { YEOKSAM_GU, YEOKSAM_DONG, YEOKSAM_SUBS, YEOKSAM_REP } from "../data/yeoksam.js";
 import { mkdirSync, writeFileSync, rmSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
@@ -17,8 +18,10 @@ const clip = (s, n = 80) => (s.length <= n ? s : s.slice(0, n - 1) + "…");
 const enc = (p) => ORIGIN + encodeURI(p);
 
 /* ---- 공통 파셜 -------------------------------------------------------- */
-function head({ title, desc, path, robots = "index,follow", extraLd = "" }) {
+function head({ title, desc, path, robots = "index,follow", canonical, extraLd = "" }) {
   const url = enc(path);
+  const canonHref = canonical ? enc(canonical) : robots.includes("noindex") ? null : url;
+  const canonLine = canonHref ? `<link rel="canonical" href="${canonHref}" />` : "";
   return `<!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -28,7 +31,7 @@ function head({ title, desc, path, robots = "index,follow", extraLd = "" }) {
   <meta name="description" content="${desc}" />
   <meta name="robots" content="${robots}" />
   <meta name="theme-color" content="#0b0e16" />
-  <link rel="canonical" href="${robots.includes("noindex") ? "" : url}" />
+  ${canonLine}
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="간다GO" />
   <meta property="og:title" content="${title}" />
@@ -44,13 +47,6 @@ function head({ title, desc, path, robots = "index,follow", extraLd = "" }) {
   ${extraLd}
 </head>
 <body>`;
-}
-
-function canonicalFix({ robots, canonical }) {
-  // noindex 페이지는 지정 canonical(구 페이지)로 연결
-  return robots && robots.includes("noindex") && canonical
-    ? `<link rel="canonical" href="${enc(canonical)}" />`
-    : "";
 }
 
 function dropdown() {
@@ -356,10 +352,7 @@ function dongPage(gu, dong) {
   };
 
   return (
-    head({ title, desc, path, robots, extraLd: ld([ORG, webpage, bc]) }).replace(
-      '<link rel="canonical" href="" />',
-      canonicalFix({ robots, canonical })
-    ) +
+    head({ title, desc, path, robots, canonical, extraLd: ld([ORG, webpage, bc]) }) +
     header() +
     `<main>
     <section class="hero region-hero">
@@ -447,6 +440,175 @@ function hubPage() {
   );
 }
 
+/* ---- 역삼동 플래그십 클러스터 ---------------------------------------- */
+const yRepUrl = `/seoul/${YEOKSAM_GU}/${YEOKSAM_DONG}/`;
+const ySubUrl = (slug) => `/seoul/${YEOKSAM_GU}/${YEOKSAM_DONG}/${slug}/`;
+
+function faqBlock(faq) {
+  const html = faq
+    .map((f, i) => `<details${i === 0 ? " open" : ""}><summary>${f.q}</summary><p>${f.a}</p></details>`)
+    .join("");
+  const ldNode = {
+    "@type": "FAQPage",
+    mainEntity: faq.map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  };
+  return { html, ldNode };
+}
+
+function whwBlock(who, how, why) {
+  return `<section class="section" style="padding-top:0"><div class="container"><div class="whw">
+      <div class="whw__item"><h3><span>Who ·</span> 누가</h3><p>${who}</p></div>
+      <div class="whw__item"><h3><span>How ·</span> 어떻게</h3><p>${how}</p></div>
+      <div class="whw__item"><h3><span>Why ·</span> 왜</h3><p>${why}</p></div>
+    </div></div></section>`;
+}
+
+function yeoksamRepPage() {
+  const R = YEOKSAM_REP;
+  const path = yRepUrl;
+  const { html: faqHtml, ldNode: faqLd } = faqBlock(R.faq);
+  const bc = breadcrumbLd([
+    { name: "홈", path: "/" },
+    { name: "서울 출장마사지", path: "/seoul/" },
+    { name: YEOKSAM_GU, path: `/seoul/${YEOKSAM_GU}/` },
+    { name: YEOKSAM_DONG, path },
+  ]);
+  const webpage = {
+    "@type": "WebPage", "@id": enc(path) + "#webpage", url: enc(path),
+    name: R.title, description: R.desc, inLanguage: "ko",
+    isPartOf: { "@id": ORIGIN + "/#website" }, about: { "@id": ORIGIN + "/#org" },
+    primaryImageOfPage: { "@type": "ImageObject", url: ORIGIN + "/assets/hero.webp" },
+  };
+  const sectionsHtml = R.sections
+    .map(
+      (s) =>
+        `<h2>${s.h2}</h2>${s.html}` +
+        (s.sub ? `<a class="more" href="${ySubUrl(s.sub)}">역삼동 ${s.sub} 자세히 보기 →</a>` : "")
+    )
+    .join("");
+  const related =
+    YEOKSAM_SUBS.map((s) => `<a href="${ySubUrl(s.slug)}">역삼동 ${s.slug}</a>`).join("") +
+    `<a href="/seoul/${YEOKSAM_GU}/">강남구 전체</a><a href="/#program">마사지 프로그램</a><a href="/#check">예약 전 확인</a>`;
+
+  return (
+    head({ title: R.title, desc: R.desc, path, extraLd: ld([ORG, webpage, bc, faqLd]) }) +
+    header() +
+    `<main>
+    <section class="hero region-hero">
+      <div class="container hero__grid">
+        <div class="hero__text">
+          <nav class="eyebrow" aria-label="위치"><a href="/seoul/" style="color:inherit">서울</a> · <a href="/seoul/${YEOKSAM_GU}/" style="color:inherit">${YEOKSAM_GU}</a></nav>
+          <h1>${R.h1}</h1>
+          <p>${R.intro}</p>
+          <div class="hero__cta">
+            <a class="btn btn--accent" href="tel:${PHONE}">전화예약 ${PHONE}</a>
+            <a class="btn btn--ghost" href="/#pricing">이용 코스 보기</a>
+            <a class="btn" href="/#check">예약 전 확인</a>
+          </div>
+        </div>
+        ${heroMedia("역삼동 출장마사지 안내 이미지")}
+      </div>
+    </section>
+
+    ${pricingBlock()}
+
+    <section class="section"><div class="container"><div class="prose">${sectionsHtml}</div></div></section>
+
+    <section class="section" style="padding-top:0"><div class="container">
+      <div class="section-head" style="text-align:left; margin-bottom:16px"><h2 style="font-size:1.35rem">관련 지역·프로그램 보기</h2></div>
+      <div class="related-links">${related}</div>
+    </div></section>
+
+    <section class="section" style="padding-top:0"><div class="container">
+      <div class="section-head" style="text-align:left; margin-bottom:18px"><h2 style="font-size:1.35rem">예약 전 확인해야 할 내용</h2></div>
+      ${checklist}
+      ${policyBlock}
+    </div></section>
+
+    <section class="section" style="padding-top:0"><div class="container">
+      <div class="section-head" style="text-align:left; margin-bottom:18px"><h2 style="font-size:1.35rem">자주 묻는 질문</h2></div>
+      <div class="faq" style="margin-left:0">${faqHtml}</div>
+    </div></section>
+
+    ${whwBlock(
+      "서울 강남구 역삼동 지역 출장마사지 예약 상담을 운영하는 간다GO가 안내합니다. 문의는 전화예약 " + PHONE + ".",
+      "역삼동의 역세권·업무지구·이용 장소별 기준을 실제 방문·예약 확인 정보로 정리해 안내합니다.",
+      "주소·건물 출입·숙소 정책 확인이 부족하면 방문이 지연되므로, 확인 정보를 먼저 제공합니다."
+    )}
+  </main>` +
+    footer()
+  );
+}
+
+function yeoksamSubPage(sub) {
+  const path = ySubUrl(sub.slug);
+  const robots = "noindex,follow"; // 본문 2,000자 도달 전까지 noindex로 시작(도어웨이 방지)
+  const { html: faqHtml, ldNode: faqLd } = faqBlock(sub.faq);
+  const bc = breadcrumbLd([
+    { name: "홈", path: "/" },
+    { name: "서울 출장마사지", path: "/seoul/" },
+    { name: YEOKSAM_GU, path: `/seoul/${YEOKSAM_GU}/` },
+    { name: YEOKSAM_DONG, path: yRepUrl },
+    { name: sub.slug, path },
+  ]);
+  const webpage = {
+    "@type": "WebPage", "@id": enc(path) + "#webpage", url: enc(path),
+    name: sub.title, description: sub.desc, inLanguage: "ko",
+    isPartOf: { "@id": ORIGIN + "/#website" }, about: { "@id": ORIGIN + "/#org" },
+  };
+  const sectionsHtml = sub.sections.map((s) => `<h2>${s.h2}</h2>${s.html}`).join("");
+  const siblings = YEOKSAM_SUBS.filter((s) => s.slug !== sub.slug)
+    .map((s) => `<a href="${ySubUrl(s.slug)}">역삼동 ${s.slug}</a>`)
+    .join("");
+  const related = `<a href="${yRepUrl}">역삼동 대표</a>${siblings}<a href="/#program">마사지 프로그램</a>`;
+
+  return (
+    head({ title: sub.title, desc: sub.desc, path, robots, extraLd: ld([ORG, webpage, bc, faqLd]) }) +
+    header() +
+    `<main>
+    <section class="hero region-hero">
+      <div class="container hero__grid">
+        <div class="hero__text">
+          <nav class="eyebrow" aria-label="위치"><a href="/seoul/" style="color:inherit">서울</a> · <a href="/seoul/${YEOKSAM_GU}/" style="color:inherit">${YEOKSAM_GU}</a> · <a href="${yRepUrl}" style="color:inherit">${YEOKSAM_DONG}</a></nav>
+          <h1>${sub.h1}</h1>
+          <p>${sub.intro}</p>
+          <div class="hero__cta">
+            <a class="btn btn--accent" href="tel:${PHONE}">전화예약 ${PHONE}</a>
+            <a class="btn btn--ghost" href="${yRepUrl}">역삼동 전체 보기</a>
+          </div>
+        </div>
+        ${heroMedia(`역삼동 ${sub.slug} 출장마사지 안내 이미지`)}
+      </div>
+    </section>
+
+    ${pricingBlock()}
+
+    <section class="section"><div class="container"><div class="prose">${sectionsHtml}</div></div></section>
+
+    <section class="section" style="padding-top:0"><div class="container">
+      <div class="section-head" style="text-align:left; margin-bottom:16px"><h2 style="font-size:1.35rem">관련 지역·프로그램 보기</h2></div>
+      <div class="related-links">${related}</div>
+    </div></section>
+
+    <section class="section" style="padding-top:0"><div class="container">
+      <div class="section-head" style="text-align:left; margin-bottom:18px"><h2 style="font-size:1.35rem">예약 전 확인해야 할 내용</h2></div>
+      ${checklist}
+      ${policyBlock}
+    </div></section>
+
+    <section class="section" style="padding-top:0"><div class="container">
+      <div class="section-head" style="text-align:left; margin-bottom:18px"><h2 style="font-size:1.35rem">자주 묻는 질문</h2></div>
+      <div class="faq" style="margin-left:0">${faqHtml}</div>
+    </div></section>
+  </main>` +
+    footer()
+  );
+}
+
 /* ---- 실행 ------------------------------------------------------------- */
 function write(path, htmlBody) {
   const dir = join(OUT, path);
@@ -458,14 +620,47 @@ if (existsSync(OUT)) rmSync(OUT, { recursive: true, force: true });
 mkdirSync(OUT, { recursive: true });
 
 let guCount = 0,
-  dongCount = 0;
+  dongCount = 0,
+  flagCount = 0;
+const indexUrls = ["/seoul/"]; // 색인 대상 URL 수집(사이트맵용)
 writeFileSync(join(OUT, "index.html"), hubPage(), "utf8");
 for (const gu of Object.keys(GUS)) {
   write(gu, guPage(gu));
+  indexUrls.push(`/seoul/${gu}/`);
   guCount++;
   for (const dong of GUS[gu].dongs) {
-    write(join(gu, dong), dongPage(gu, dong));
+    if (gu === YEOKSAM_GU && dong === YEOKSAM_DONG) {
+      // 플래그십: 대표 페이지(index) + 서브 6개(index)
+      write(join(gu, dong), yeoksamRepPage());
+      indexUrls.push(yRepUrl); // 대표 페이지만 index/사이트맵
+      for (const sub of YEOKSAM_SUBS) {
+        write(join(gu, dong, sub.slug), yeoksamSubPage(sub)); // 서브는 noindex,follow
+        flagCount++;
+      }
+      flagCount++; // 대표 페이지
+    } else {
+      write(join(gu, dong), dongPage(gu, dong)); // 일반 행정동(noindex)
+    }
     dongCount++;
   }
 }
-console.log(`생성 완료: 허브 1 + 구 ${guCount} + 행정동 ${dongCount} = ${1 + guCount + dongCount} 페이지`);
+// 사이트맵 재생성(색인 대상만)
+const sm =
+  `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n` +
+  [`/`, ...indexUrls]
+    .map((u) => {
+      const loc = enc(u);
+      const pri = u === "/" ? "1.0" : u === "/seoul/" ? "0.9" : u.split("/").filter(Boolean).length >= 4 ? "0.7" : "0.8";
+      const img =
+        u === "/"
+          ? `\n    <image:image>\n      <image:loc>${ORIGIN}/assets/og-image.svg</image:loc>\n      <image:title>서울 출장마사지 간다GO</image:title>\n    </image:image>`
+          : "";
+      return `  <url>\n    <loc>${loc}</loc>\n    <changefreq>weekly</changefreq>\n    <priority>${pri}</priority>${img}\n  </url>`;
+    })
+    .join("\n") +
+  `\n</urlset>\n`;
+writeFileSync(join(ROOT, "sitemap.xml"), sm, "utf8");
+
+console.log(
+  `생성 완료: 허브 1 + 구 ${guCount} + 행정동 ${dongCount}(플래그십 서브 ${flagCount}) / 사이트맵 색인 ${indexUrls.length + 1}개`
+);

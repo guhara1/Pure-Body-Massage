@@ -502,6 +502,32 @@ ul { margin: 0; padding: 0; list-style: none; }
 .whw__item p { color: var(--text-muted); font-size: 0.95rem; margin: 0; }
 @media (max-width: 720px) { .whw { grid-template-columns: 1fr; } }
 
+/* 본문 프로즈(플래그십 지역 페이지) */
+.prose { max-width: 820px; }
+.prose h2 { font-size: 1.35rem; margin: 34px 0 12px; }
+.prose h2:first-child { margin-top: 0; }
+.prose p { color: var(--text-muted); margin: 0 0 12px; }
+.prose .ul { margin: 4px 0 14px; display: grid; gap: 8px; }
+.prose .ul li {
+  position: relative; padding-left: 22px; color: var(--text-muted);
+}
+.prose .ul li::before {
+  content: ""; position: absolute; left: 6px; top: 11px;
+  width: 6px; height: 6px; border-radius: 50%; background: var(--accent);
+}
+.prose .more {
+  display: inline-flex; align-items: center; gap: 4px;
+  color: var(--accent); font-weight: 700; font-size: 0.92rem; margin: 2px 0 6px;
+}
+.related-links { display: flex; flex-wrap: wrap; gap: 10px; }
+.related-links a {
+  padding: 10px 16px; border-radius: var(--radius-pill);
+  border: 1px solid var(--border-strong); background: var(--surface);
+  color: var(--text-muted); font-weight: 600; font-size: 0.9rem;
+  transition: color 0.15s, border-color 0.15s;
+}
+.related-links a:hover { color: var(--accent); border-color: var(--accent-strong); }
+
 /* 정책 고지 배너 */
 .notice {
   max-width: 900px; margin: 28px auto 0;
