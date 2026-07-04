@@ -163,6 +163,14 @@ const ORG = {
   sameAs: [TELEGRAM],
 };
 
+/* 공통 히어로 이미지 (전 지역 노출) */
+function heroMedia(alt) {
+  return `<div class="hero__media">
+          <img src="/assets/hero.webp" alt="${alt}" width="1000" height="750" loading="lazy" onerror="this.style.display='none';this.closest('.hero__media').classList.add('is-empty')" />
+          <span class="hero__media-ph" aria-hidden="true">이미지 영역<small>assets/hero.webp</small></span>
+        </div>`;
+}
+
 /* 공통 요금표 블록 (메인과 동일한 60·90·120분 코스) */
 function pricingBlock() {
   const card = (name, price, dur, desc, featured) =>
@@ -260,18 +268,19 @@ function guPage(gu) {
     head({ title, desc, path, extraLd: ld([ORG, webpage, bc, faqLd]) }) +
     header() +
     `<main>
-    <section class="section" style="padding-bottom:0">
-      <div class="container">
-        <nav class="eyebrow" aria-label="위치"><a href="/seoul/" style="color:inherit">서울</a> · ${d.region}</nav>
-        <div class="section-head" style="text-align:left; margin-bottom:22px; max-width:820px">
-          <h2 style="font-size:clamp(1.7rem,4vw,2.4rem)">${gu} 출장마사지 · 생활권과 마사지 프로그램 안내</h2>
-          <p style="margin-left:0">${d.intro}</p>
+    <section class="hero region-hero">
+      <div class="container hero__grid">
+        <div class="hero__text">
+          <nav class="eyebrow" aria-label="위치"><a href="/seoul/" style="color:inherit">서울</a> · ${d.region}</nav>
+          <h1>${gu} 출장마사지 · 생활권과 마사지 프로그램 안내</h1>
+          <p>${d.intro}</p>
+          <div class="hero__cta">
+            <a class="btn btn--accent" href="tel:${PHONE}">전화예약 ${PHONE}</a>
+            <a class="btn btn--ghost" href="/#pricing">이용 코스 보기</a>
+            <a class="btn" href="/#check">예약 전 확인</a>
+          </div>
         </div>
-        <div class="hero__cta" style="justify-content:flex-start; margin-top:8px">
-          <a class="btn btn--accent" href="tel:${PHONE}">전화예약 ${PHONE}</a>
-          <a class="btn btn--ghost" href="/#pricing">이용 코스 보기</a>
-          <a class="btn" href="/#check">예약 전 확인</a>
-        </div>
+        ${heroMedia(`${gu} 출장마사지 안내 이미지`)}
       </div>
     </section>
 
@@ -353,17 +362,18 @@ function dongPage(gu, dong) {
     ) +
     header() +
     `<main>
-    <section class="section" style="padding-bottom:0">
-      <div class="container">
-        <nav class="eyebrow" aria-label="위치"><a href="/seoul/" style="color:inherit">서울</a> · <a href="/seoul/${gu}/" style="color:inherit">${gu}</a></nav>
-        <div class="section-head" style="text-align:left; margin-bottom:22px; max-width:820px">
-          <h2 style="font-size:clamp(1.6rem,3.6vw,2.2rem)">${dong} 출장마사지 · ${gu} 이용 안내</h2>
-          <p style="margin-left:0">${dong}은 ${gu} ${d.region} 생활권에 속합니다. 방문 주소, 건물 출입, 숙소 정책 등 예약 전 확인사항을 안내하며, 자세한 구 단위 안내는 <a href="/seoul/${gu}/" style="color:var(--accent);font-weight:700">${gu} 페이지</a>에서 확인하세요.</p>
+    <section class="hero region-hero">
+      <div class="container hero__grid">
+        <div class="hero__text">
+          <nav class="eyebrow" aria-label="위치"><a href="/seoul/" style="color:inherit">서울</a> · <a href="/seoul/${gu}/" style="color:inherit">${gu}</a></nav>
+          <h1>${dong} 출장마사지 · ${gu} 이용 안내</h1>
+          <p>${dong}은 ${gu} ${d.region} 생활권에 속합니다. 방문 주소, 건물 출입, 숙소 정책 등 예약 전 확인사항을 안내하며, 자세한 구 단위 안내는 <a href="/seoul/${gu}/" style="color:var(--accent);font-weight:700">${gu} 페이지</a>에서 확인하세요.</p>
+          <div class="hero__cta">
+            <a class="btn btn--accent" href="tel:${PHONE}">전화예약 ${PHONE}</a>
+            <a class="btn btn--ghost" href="/seoul/${gu}/">${gu} 전체 보기</a>
+          </div>
         </div>
-        <div class="hero__cta" style="justify-content:flex-start; margin-top:8px">
-          <a class="btn btn--accent" href="tel:${PHONE}">전화예약 ${PHONE}</a>
-          <a class="btn btn--ghost" href="/seoul/${gu}/">${gu} 전체 보기</a>
-        </div>
+        ${heroMedia(`${dong} ${gu} 출장마사지 안내 이미지`)}
       </div>
     </section>
 
@@ -411,11 +421,18 @@ function hubPage() {
     head({ title, desc, path, extraLd: ld([ORG, webpage, bc]) }) +
     header() +
     `<main>
-    <section class="hero" style="padding-bottom:40px">
-      <div class="container">
-        <span class="eyebrow">권역별 안내</span>
-        <h1>서울 출장마사지<br/>5대 권역 · 25개 구 안내</h1>
-        <p>서울은 같은 구 안에서도 업무지구·주거지·숙소 인접권이 다릅니다. 권역과 구, 생활권을 함께 확인하세요.</p>
+    <section class="hero region-hero">
+      <div class="container hero__grid">
+        <div class="hero__text">
+          <span class="eyebrow">권역별 안내</span>
+          <h1>서울 출장마사지<br/>5대 권역 · 25개 구 안내</h1>
+          <p>서울은 같은 구 안에서도 업무지구·주거지·숙소 인접권이 다릅니다. 권역과 구, 생활권을 함께 확인하세요.</p>
+          <div class="hero__cta">
+            <a class="btn btn--accent" href="tel:${PHONE}">전화예약 ${PHONE}</a>
+            <a class="btn btn--ghost" href="/#pricing">이용 코스 보기</a>
+          </div>
+        </div>
+        ${heroMedia("서울 출장마사지 안내 이미지")}
       </div>
     </section>
     <section class="section" style="padding-top:40px">
