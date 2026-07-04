@@ -197,6 +197,67 @@ ul { margin: 0; padding: 0; list-style: none; }
 .nav__cta { display: flex; align-items: center; gap: 10px; }
 .nav__phone { font-weight: 800; color: var(--text); font-size: 0.98rem; white-space: nowrap; }
 
+/* ---- 권역별 안내 메가 드롭다운 ---- */
+.nav-dd { position: relative; }
+.nav-dd > summary {
+  list-style: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 0.95rem;
+  display: inline-flex; align-items: center; gap: 5px;
+  transition: color 0.15s;
+}
+.nav-dd > summary::-webkit-details-marker { display: none; }
+.nav-dd > summary::after { content: "▾"; font-size: 0.8rem; }
+.nav-dd[open] > summary,
+.nav-dd > summary:hover { color: var(--text); }
+.nav-dd__panel {
+  position: absolute;
+  top: calc(100% + 14px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(760px, 90vw);
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px 18px;
+  padding: 22px;
+  background: var(--overlay-glass), var(--bg-elev);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+}
+.nav-dd__panel::before {
+  content: "";
+  position: absolute; top: -7px; left: 50%; transform: translateX(-50%) rotate(45deg);
+  width: 13px; height: 13px;
+  background: var(--bg-elev);
+  border-left: 1px solid var(--border-strong);
+  border-top: 1px solid var(--border-strong);
+}
+.nav-dd__region {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+  padding-bottom: 8px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid var(--border);
+}
+.nav-dd__panel a {
+  display: block;
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  font-weight: 600;
+  padding: 5px 0;
+}
+.nav-dd__panel a:hover { color: var(--accent); }
+
+@media (max-width: 980px) {
+  .nav-dd__panel { grid-template-columns: repeat(2, 1fr); width: min(460px, 92vw); }
+}
+
 @media (max-width: 860px) {
   .nav__links { display: none; }
   .nav__phone { display: none; }
