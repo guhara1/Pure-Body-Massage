@@ -163,6 +163,30 @@ const ORG = {
   sameAs: [TELEGRAM],
 };
 
+/* 공통 요금표 블록 (메인과 동일한 60·90·120분 코스) */
+function pricingBlock() {
+  const card = (name, price, dur, desc, featured) =>
+    `<article class="price-card${featured ? " price-card--featured" : ""}">${
+      featured ? '<span class="price-card__badge">추천</span>' : ""
+    }<h3 class="price-card__name">${name}</h3><div class="price-card__price">${price}<span class="won">원</span></div><div class="price-card__dur">${dur}</div><p class="price-card__desc">${desc}</p><a class="btn ${
+      featured ? "btn--accent" : "btn--ghost"
+    } btn--block" href="tel:${PHONE}">예약 문의</a></article>`;
+  return `<section class="section pricing" id="pricing">
+      <div class="container">
+        <div class="section-head">
+          <h2>이용 코스와 요금 살펴보기</h2>
+          <p>60·90·120분 코스별 기준 요금이며, 추가 비용 없이 있는 그대로 안내드립니다.</p>
+        </div>
+        <div class="pricing__grid">
+          ${card("60분 코스", "90,000", "60분", "기본 컨디션·릴렉스 케어", false)}
+          ${card("90분 코스", "150,000", "90분", "아로마 포함 추천 구성", true)}
+          ${card("120분 코스", "180,000", "120분", "전신 집중 프리미엄 케어", false)}
+        </div>
+        <p class="pricing__note">지역·예약 시간대·이동 거리에 따라 상담 시 최종 확인됩니다. <a href="/#check">상세 예약 전 확인 보기 →</a></p>
+      </div>
+    </section>`;
+}
+
 /* 공통 정책/체크리스트/FAQ 블록 */
 const policyBlock = `<div class="notice">개인정보는 예약 확인·연락에 필요한 최소 정보만 확인하며, <strong>불법·선정적 서비스는 제공하거나 안내하지 않습니다.</strong> <a href="https://www.pipc.go.kr/" target="_blank" rel="noopener nofollow">개인정보보호위원회 안내 ↗</a></div>`;
 
@@ -250,6 +274,8 @@ function guPage(gu) {
         </div>
       </div>
     </section>
+
+    ${pricingBlock()}
 
     <section class="section">
       <div class="container">
@@ -341,6 +367,8 @@ function dongPage(gu, dong) {
       </div>
     </section>
 
+    ${pricingBlock()}
+
     <section class="section">
       <div class="container">
         <div class="section-head" style="text-align:left; margin-bottom:18px"><h2 style="font-size:1.35rem">이용 가능한 마사지 프로그램</h2></div>
@@ -393,9 +421,10 @@ function hubPage() {
     <section class="section" style="padding-top:40px">
       <div class="container">
         <div class="card-grid" style="grid-template-columns:repeat(auto-fill,minmax(280px,1fr))">${cols}</div>
-        ${policyBlock}
       </div>
     </section>
+    ${pricingBlock()}
+    <section class="section" style="padding-top:0"><div class="container">${policyBlock}</div></section>
   </main>` +
     footer()
   );
