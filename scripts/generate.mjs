@@ -546,7 +546,7 @@ function yeoksamRepPage() {
 
 function yeoksamSubPage(sub) {
   const path = ySubUrl(sub.slug);
-  const robots = "noindex,follow"; // 본문 2,000자 도달 전까지 noindex로 시작(도어웨이 방지)
+  const robots = "index,follow"; // 본문 2,000자+ 확장 완료 → index 승격
   const { html: faqHtml, ldNode: faqLd } = faqBlock(sub.faq);
   const bc = breadcrumbLd([
     { name: "홈", path: "/" },
@@ -632,9 +632,10 @@ for (const gu of Object.keys(GUS)) {
     if (gu === YEOKSAM_GU && dong === YEOKSAM_DONG) {
       // 플래그십: 대표 페이지(index) + 서브 6개(index)
       write(join(gu, dong), yeoksamRepPage());
-      indexUrls.push(yRepUrl); // 대표 페이지만 index/사이트맵
+      indexUrls.push(yRepUrl);
       for (const sub of YEOKSAM_SUBS) {
-        write(join(gu, dong, sub.slug), yeoksamSubPage(sub)); // 서브는 noindex,follow
+        write(join(gu, dong, sub.slug), yeoksamSubPage(sub)); // 서브 index(2,000자+)
+        indexUrls.push(ySubUrl(sub.slug));
         flagCount++;
       }
       flagCount++; // 대표 페이지
