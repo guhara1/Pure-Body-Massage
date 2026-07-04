@@ -6,7 +6,7 @@
    실행: node scripts/generate.mjs
    ========================================================================== */
 import { REGIONS, GUS, PHONE, TELEGRAM, ORIGIN } from "../data/seoul.js";
-import { YEOKSAM_GU, YEOKSAM_DONG, YEOKSAM_SUBS, YEOKSAM_REP } from "../data/yeoksam.js";
+import { FLAGSHIPS } from "../data/flagships.js";
 import { mkdirSync, writeFileSync, rmSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
@@ -440,9 +440,10 @@ function hubPage() {
   );
 }
 
-/* ---- 역삼동 플래그십 클러스터 ---------------------------------------- */
-const yRepUrl = `/seoul/${YEOKSAM_GU}/${YEOKSAM_DONG}/`;
-const ySubUrl = (slug) => `/seoul/${YEOKSAM_GU}/${YEOKSAM_DONG}/${slug}/`;
+/* ---- 플래그십 클러스터(대표 허브 + 서브) ---------------------------- */
+const repUrlOf = (c) => `/seoul/${c.gu}/${c.dong}/`;
+const subUrlOf = (c, slug) => `/seoul/${c.gu}/${c.dong}/${slug}/`;
+const FLAGMAP = new Map(FLAGSHIPS.map((c) => [`${c.gu}/${c.dong}`, c]));
 
 function faqBlock(faq) {
   const html = faq
@@ -467,15 +468,15 @@ function whwBlock(who, how, why) {
     </div></div></section>`;
 }
 
-function yeoksamRepPage() {
-  const R = YEOKSAM_REP;
-  const path = yRepUrl;
+function flagRepPage(c) {
+  const R = c.rep;
+  const path = repUrlOf(c);
   const { html: faqHtml, ldNode: faqLd } = faqBlock(R.faq);
   const bc = breadcrumbLd([
     { name: "홈", path: "/" },
     { name: "서울 출장마사지", path: "/seoul/" },
-    { name: YEOKSAM_GU, path: `/seoul/${YEOKSAM_GU}/` },
-    { name: YEOKSAM_DONG, path },
+    { name: c.gu, path: `/seoul/${c.gu}/` },
+    { name: c.dong, path },
   ]);
   const webpage = {
     "@type": "WebPage", "@id": enc(path) + "#webpage", url: enc(path),
@@ -487,12 +488,12 @@ function yeoksamRepPage() {
     .map(
       (s) =>
         `<h2>${s.h2}</h2>${s.html}` +
-        (s.sub ? `<a class="more" href="${ySubUrl(s.sub)}">역삼동 ${s.sub} 자세히 보기 →</a>` : "")
+        (s.sub ? `<a class="more" href="${subUrlOf(c, s.sub)}">${c.dong} ${s.sub} 자세히 보기 →</a>` : "")
     )
     .join("");
   const related =
-    YEOKSAM_SUBS.map((s) => `<a href="${ySubUrl(s.slug)}">역삼동 ${s.slug}</a>`).join("") +
-    `<a href="/seoul/${YEOKSAM_GU}/">강남구 전체</a><a href="/#program">마사지 프로그램</a><a href="/#check">예약 전 확인</a>`;
+    c.subs.map((s) => `<a href="${subUrlOf(c, s.slug)}">${c.dong} ${s.slug}</a>`).join("") +
+    `<a href="/seoul/${c.gu}/">${c.gu} 전체</a><a href="/#program">마사지 프로그램</a><a href="/#check">예약 전 확인</a>`;
 
   return (
     head({ title: R.title, desc: R.desc, path, extraLd: ld([ORG, webpage, bc, faqLd]) }) +
@@ -501,7 +502,7 @@ function yeoksamRepPage() {
     <section class="hero region-hero">
       <div class="container hero__grid">
         <div class="hero__text">
-          <nav class="eyebrow" aria-label="위치"><a href="/seoul/" style="color:inherit">서울</a> · <a href="/seoul/${YEOKSAM_GU}/" style="color:inherit">${YEOKSAM_GU}</a></nav>
+          <nav class="eyebrow" aria-label="위치"><a href="/seoul/" style="color:inherit">서울</a> · <a href="/seoul/${c.gu}/" style="color:inherit">${c.gu}</a></nav>
           <h1>${R.h1}</h1>
           <p>${R.intro}</p>
           <div class="hero__cta">
@@ -510,7 +511,7 @@ function yeoksamRepPage() {
             <a class="btn" href="/#check">예약 전 확인</a>
           </div>
         </div>
-        ${heroMedia("역삼동 출장마사지 안내 이미지")}
+        ${heroMedia(`${c.dong} 출장마사지 안내 이미지`)}
       </div>
     </section>
 
@@ -535,8 +536,8 @@ function yeoksamRepPage() {
     </div></section>
 
     ${whwBlock(
-      "서울 강남구 역삼동 지역 출장마사지 예약 상담을 운영하는 간다GO가 안내합니다. 문의는 전화예약 " + PHONE + ".",
-      "역삼동의 역세권·업무지구·이용 장소별 기준을 실제 방문·예약 확인 정보로 정리해 안내합니다.",
+      `서울 ${c.gu} ${c.dong} 지역 출장마사지 예약 상담을 운영하는 간다GO가 안내합니다. 문의는 전화예약 ${PHONE}.`,
+      `${c.dong}의 역세권·생활권·이용 장소별 기준을 실제 방문·예약 확인 정보로 정리해 안내합니다.`,
       "주소·건물 출입·숙소 정책 확인이 부족하면 방문이 지연되므로, 확인 정보를 먼저 제공합니다."
     )}
   </main>` +
@@ -544,15 +545,16 @@ function yeoksamRepPage() {
   );
 }
 
-function yeoksamSubPage(sub) {
-  const path = ySubUrl(sub.slug);
-  const robots = "index,follow"; // 본문 2,000자+ 확장 완료 → index 승격
+function flagSubPage(c, sub) {
+  const path = subUrlOf(c, sub.slug);
+  const robots = "index,follow"; // 본문 2,000자+ → index
+  const repUrl = repUrlOf(c);
   const { html: faqHtml, ldNode: faqLd } = faqBlock(sub.faq);
   const bc = breadcrumbLd([
     { name: "홈", path: "/" },
     { name: "서울 출장마사지", path: "/seoul/" },
-    { name: YEOKSAM_GU, path: `/seoul/${YEOKSAM_GU}/` },
-    { name: YEOKSAM_DONG, path: yRepUrl },
+    { name: c.gu, path: `/seoul/${c.gu}/` },
+    { name: c.dong, path: repUrl },
     { name: sub.slug, path },
   ]);
   const webpage = {
@@ -561,10 +563,10 @@ function yeoksamSubPage(sub) {
     isPartOf: { "@id": ORIGIN + "/#website" }, about: { "@id": ORIGIN + "/#org" },
   };
   const sectionsHtml = sub.sections.map((s) => `<h2>${s.h2}</h2>${s.html}`).join("");
-  const siblings = YEOKSAM_SUBS.filter((s) => s.slug !== sub.slug)
-    .map((s) => `<a href="${ySubUrl(s.slug)}">역삼동 ${s.slug}</a>`)
+  const siblings = c.subs.filter((s) => s.slug !== sub.slug)
+    .map((s) => `<a href="${subUrlOf(c, s.slug)}">${c.dong} ${s.slug}</a>`)
     .join("");
-  const related = `<a href="${yRepUrl}">역삼동 대표</a>${siblings}<a href="/#program">마사지 프로그램</a>`;
+  const related = `<a href="${repUrl}">${c.dong} 대표</a>${siblings}<a href="/#program">마사지 프로그램</a>`;
 
   return (
     head({ title: sub.title, desc: sub.desc, path, robots, extraLd: ld([ORG, webpage, bc, faqLd]) }) +
@@ -573,15 +575,15 @@ function yeoksamSubPage(sub) {
     <section class="hero region-hero">
       <div class="container hero__grid">
         <div class="hero__text">
-          <nav class="eyebrow" aria-label="위치"><a href="/seoul/" style="color:inherit">서울</a> · <a href="/seoul/${YEOKSAM_GU}/" style="color:inherit">${YEOKSAM_GU}</a> · <a href="${yRepUrl}" style="color:inherit">${YEOKSAM_DONG}</a></nav>
+          <nav class="eyebrow" aria-label="위치"><a href="/seoul/" style="color:inherit">서울</a> · <a href="/seoul/${c.gu}/" style="color:inherit">${c.gu}</a> · <a href="${repUrl}" style="color:inherit">${c.dong}</a></nav>
           <h1>${sub.h1}</h1>
           <p>${sub.intro}</p>
           <div class="hero__cta">
             <a class="btn btn--accent" href="tel:${PHONE}">전화예약 ${PHONE}</a>
-            <a class="btn btn--ghost" href="${yRepUrl}">역삼동 전체 보기</a>
+            <a class="btn btn--ghost" href="${repUrl}">${c.dong} 전체 보기</a>
           </div>
         </div>
-        ${heroMedia(`역삼동 ${sub.slug} 출장마사지 안내 이미지`)}
+        ${heroMedia(`${c.dong} ${sub.slug} 출장마사지 안내 이미지`)}
       </div>
     </section>
 
@@ -629,13 +631,14 @@ for (const gu of Object.keys(GUS)) {
   indexUrls.push(`/seoul/${gu}/`);
   guCount++;
   for (const dong of GUS[gu].dongs) {
-    if (gu === YEOKSAM_GU && dong === YEOKSAM_DONG) {
-      // 플래그십: 대표 페이지(index) + 서브 6개(index)
-      write(join(gu, dong), yeoksamRepPage());
-      indexUrls.push(yRepUrl);
-      for (const sub of YEOKSAM_SUBS) {
-        write(join(gu, dong, sub.slug), yeoksamSubPage(sub)); // 서브 index(2,000자+)
-        indexUrls.push(ySubUrl(sub.slug));
+    const cfg = FLAGMAP.get(`${gu}/${dong}`);
+    if (cfg) {
+      // 플래그십: 대표 페이지(index) + 서브(index)
+      write(join(gu, dong), flagRepPage(cfg));
+      indexUrls.push(repUrlOf(cfg));
+      for (const sub of cfg.subs) {
+        write(join(gu, dong, sub.slug), flagSubPage(cfg, sub));
+        indexUrls.push(subUrlOf(cfg, sub.slug));
         flagCount++;
       }
       flagCount++; // 대표 페이지
