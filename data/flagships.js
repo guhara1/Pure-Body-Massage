@@ -17,6 +17,9 @@ import { GANGDONG_GU, GANGDONG_DONG, GANGDONG_REP, GANGDONG_SUBS } from "./gangd
 import { GANGSEO_GU, GANGSEO_DONG, GANGSEO_REP, GANGSEO_SUBS } from "./gangseo.js";
 import { GWANAK_GU, GWANAK_DONG, GWANAK_REP, GWANAK_SUBS } from "./gwanak.js";
 import { DONGJAK_GU, DONGJAK_DONG, DONGJAK_REP, DONGJAK_SUBS } from "./dongjak.js";
+import { SEODAEMUN_GU, SEODAEMUN_DONG, SEODAEMUN_REP, SEODAEMUN_SUBS } from "./seodaemun.js";
+import { EUNPYEONG_GU, EUNPYEONG_DONG, EUNPYEONG_REP, EUNPYEONG_SUBS } from "./eunpyeong.js";
+import { NOWON_GU, NOWON_DONG, NOWON_REP, NOWON_SUBS } from "./nowon.js";
 
 export const FLAGSHIPS = [
   { gu: YEOKSAM_GU, dong: YEOKSAM_DONG, rep: YEOKSAM_REP, subs: YEOKSAM_SUBS },
@@ -32,4 +35,7 @@ export const FLAGSHIPS = [
   { gu: GANGSEO_GU, dong: GANGSEO_DONG, rep: GANGSEO_REP, subs: GANGSEO_SUBS },
   { gu: GWANAK_GU, dong: GWANAK_DONG, rep: GWANAK_REP, subs: GWANAK_SUBS },
   { gu: DONGJAK_GU, dong: DONGJAK_DONG, rep: DONGJAK_REP, subs: DONGJAK_SUBS },
+  { gu: SEODAEMUN_GU, dong: SEODAEMUN_DONG, rep: SEODAEMUN_REP, subs: SEODAEMUN_SUBS },
+  { gu: EUNPYEONG_GU, dong: EUNPYEONG_DONG, rep: EUNPYEONG_REP, subs: EUNPYEONG_SUBS },
+  { gu: NOWON_GU, dong: NOWON_DONG, rep: NOWON_REP, subs: NOWON_SUBS },
 ];
