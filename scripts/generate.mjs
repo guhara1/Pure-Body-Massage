@@ -679,10 +679,27 @@ for (const gu of Object.keys(GUS)) {
     dongCount++;
   }
 }
-// 사이트맵 재생성(색인 대상만)
+// 빌드 시각(사이트맵 lastmod · RSS pubDate)
+const BUILD = new Date();
+const ISO = BUILD.toISOString().slice(0, 10);
+const RFC = BUILD.toUTCString();
+const xesc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+const allUrls = [`/`, ...indexUrls];
+
+// 색인 페이지 제목(RSS·내부 참조용)
+function urlTitle(u) {
+  if (u === "/") return "서울 출장마사지 간다GO · 지역별 생활권과 마사지 프로그램 안내";
+  if (u === "/seoul/") return "서울 출장마사지 · 5대 권역과 25개 구 안내";
+  const p = decodeURIComponent(u).split("/").filter(Boolean).slice(1); // ["강남구", "역삼동", "역삼역"]
+  if (p.length === 1) return `${p[0]} 출장마사지 · 생활권과 마사지 프로그램 안내`;
+  if (p.length === 2) return `${p[1]}(${p[0]}) 출장마사지 이용 안내`;
+  return `${p.slice(1).join(" ")} · ${p[0]} 출장마사지 이용 안내`;
+}
+
+// 사이트맵 재생성(색인 대상만 · lastmod 포함)
 const sm =
   `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n` +
-  [`/`, ...indexUrls]
+  allUrls
     .map((u) => {
       const loc = enc(u);
       const pri = u === "/" ? "1.0" : u === "/seoul/" ? "0.9" : u.split("/").filter(Boolean).length >= 4 ? "0.7" : "0.8";
@@ -690,11 +707,28 @@ const sm =
         u === "/"
           ? `\n    <image:image>\n      <image:loc>${ORIGIN}/assets/og-image.svg</image:loc>\n      <image:title>서울 출장마사지 간다GO</image:title>\n    </image:image>`
           : "";
-      return `  <url>\n    <loc>${loc}</loc>\n    <changefreq>weekly</changefreq>\n    <priority>${pri}</priority>${img}\n  </url>`;
+      return `  <url>\n    <loc>${loc}</loc>\n    <lastmod>${ISO}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>${pri}</priority>${img}\n  </url>`;
     })
     .join("\n") +
   `\n</urlset>\n`;
 writeFileSync(join(ROOT, "sitemap.xml"), sm, "utf8");
+
+// RSS 2.0 피드(네이버·구글 빠른 색인용)
+const rss =
+  `<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">\n<channel>\n` +
+  `  <title>간다GO · 서울 출장마사지 안내</title>\n` +
+  `  <link>${ORIGIN}/</link>\n` +
+  `  <atom:link href="${ORIGIN}/rss.xml" rel="self" type="application/rss+xml" />\n` +
+  `  <description>서울 25개 구 출장마사지·홈타이 지역별 생활권과 마사지 프로그램 예약 전 확인 안내</description>\n` +
+  `  <language>ko</language>\n  <lastBuildDate>${RFC}</lastBuildDate>\n` +
+  allUrls
+    .map(
+      (u) =>
+        `  <item>\n    <title>${xesc(urlTitle(u))}</title>\n    <link>${enc(u)}</link>\n    <guid isPermaLink="true">${enc(u)}</guid>\n    <pubDate>${RFC}</pubDate>\n  </item>`
+    )
+    .join("\n") +
+  `\n</channel>\n</rss>\n`;
+writeFileSync(join(ROOT, "rss.xml"), rss, "utf8");
 
 console.log(
   `생성 완료: 허브 1 + 구 ${guCount} + 행정동 ${dongCount}(플래그십 서브 ${flagCount}) / 사이트맵 색인 ${indexUrls.length + 1}개`

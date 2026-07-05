@@ -6,7 +6,7 @@
 
 export const PHONE = "0508-202-4719";
 export const TELEGRAM = "https://t.me/ganda_go";
-export const ORIGIN = "https://ganda-go.com";
+export const ORIGIN = "https://pure-body-massage.pages.dev";
 
 export const REGIONS = [
   { key: "gangnam-southeast", name: "강남·동남권", gus: ["강남구", "서초구", "송파구", "강동구"] },
