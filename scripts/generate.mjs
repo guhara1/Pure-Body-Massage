@@ -305,6 +305,26 @@ function guPage(gu) {
       </div>
     </section>
 
+    ${
+      (FLAGBYGU.get(gu) || []).length
+        ? `<section class="section" style="padding-top:0"><div class="container">
+      <div class="section-head" style="text-align:left; margin-bottom:16px"><h2 style="font-size:1.4rem">${gu} 대표 지역 상세 안내</h2><p style="margin-left:0">역세권·이용 장소(오피스텔·원룸·아파트)별 상세 안내가 있는 대표 생활권입니다.</p></div>
+      <div class="card-grid">${(FLAGBYGU.get(gu) || [])
+        .map(
+          (c) =>
+            `<a class="link-card" href="${repUrlOf(c)}"><span class="link-card__title">${c.dong} 출장마사지</span><span class="link-card__sub">${c.subs
+              .map((s) => s.slug)
+              .slice(0, 4)
+              .join(" · ")} 등 상세 안내</span><span class="link-card__arrow">상세 보기 →</span></a>`
+        )
+        .join("")}</div>
+      <div class="related-links" style="margin-top:16px">${(FLAGBYGU.get(gu) || [])
+        .flatMap((c) => c.subs.map((s) => `<a href="${subUrlOf(c, s.slug)}">${c.dong} ${s.slug} 출장마사지</a>`))
+        .join("")}</div>
+    </div></section>`
+        : ""
+    }
+
     <section class="section" style="padding-top:0">
       <div class="container">
         <div class="section-head" style="text-align:left; margin-bottom:18px"><h2 style="font-size:1.4rem">${gu} 행정동별 이용 안내</h2><p style="margin-left:0">방문 주소·건물 출입 방식은 동마다 다릅니다. 번호동(1·2·3동)은 대표 행정동 1개로 안내합니다.</p></div>
@@ -476,6 +496,16 @@ const repUrlOf = (c) => `/seoul/${c.gu}/${c.dong}/`;
 const subUrlOf = (c, slug) => `/seoul/${c.gu}/${c.dong}/${slug}/`;
 const FLAGMAP = new Map(FLAGSHIPS.map((c) => [`${c.gu}/${c.dong}`, c]));
 
+// 구 → 플래그십 클러스터 목록(구당 1~2개)
+const FLAGBYGU = FLAGSHIPS.reduce((m, c) => (m.set(c.gu, [...(m.get(c.gu) || []), c]), m), new Map());
+// 구 → 권역명
+const REGIONOFGU = REGIONS.reduce((m, r) => (r.gus.forEach((g) => m.set(g, r.name)), m), new Map());
+// 같은 권역의 다른 대표 지역(교차 내부링크용)
+function nearbyFlags(gu, n = 4) {
+  const region = REGIONOFGU.get(gu);
+  return FLAGSHIPS.filter((c) => c.gu !== gu && REGIONOFGU.get(c.gu) === region).slice(0, n);
+}
+
 function faqBlock(faq) {
   const html = faq
     .map((f, i) => `<details${i === 0 ? " open" : ""}><summary>${f.q}</summary><p>${f.a}</p></details>`)
@@ -524,7 +554,9 @@ function flagRepPage(c) {
     .join("");
   const related =
     c.subs.map((s) => `<a href="${subUrlOf(c, s.slug)}">${c.dong} ${s.slug}</a>`).join("") +
-    `<a href="/seoul/${c.gu}/">${c.gu} 전체</a><a href="/#program">마사지 프로그램</a><a href="/#check">예약 전 확인</a>`;
+    `<a href="/seoul/${c.gu}/">${c.gu} 전체</a>` +
+    nearbyFlags(c.gu).map((n) => `<a href="${repUrlOf(n)}">${n.dong} 출장마사지</a>`).join("") +
+    `<a href="/#program">마사지 프로그램</a><a href="/#check">예약 전 확인</a>`;
 
   return (
     head({ title: R.title, desc: R.desc, path, extraLd: ld([ORG, webpage, bc, faqLd]) }) +
@@ -597,7 +629,10 @@ function flagSubPage(c, sub) {
   const siblings = c.subs.filter((s) => s.slug !== sub.slug)
     .map((s) => `<a href="${subUrlOf(c, s.slug)}">${c.dong} ${s.slug}</a>`)
     .join("");
-  const related = `<a href="${repUrl}">${c.dong} 대표</a>${siblings}<a href="/#program">마사지 프로그램</a>`;
+  const related =
+    `<a href="${repUrl}">${c.dong} 대표</a>${siblings}<a href="/seoul/${c.gu}/">${c.gu} 전체</a>` +
+    nearbyFlags(c.gu, 3).map((n) => `<a href="${repUrlOf(n)}">${n.dong} 출장마사지</a>`).join("") +
+    `<a href="/#program">마사지 프로그램</a>`;
 
   return (
     head({ title: sub.title, desc: sub.desc, path, robots, extraLd: ld([ORG, webpage, bc, faqLd]) }) +
