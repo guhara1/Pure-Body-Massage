@@ -696,9 +696,79 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://ganda-go.com/seoul/%EB%8F%99%EB%8C%80%EB%AC%B8%EA%B5%AC/%EC%A0%84%EB%86%8D%EB%8F%99/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://ganda-go.com/seoul/%EB%8F%99%EB%8C%80%EB%AC%B8%EA%B5%AC/%EC%A0%84%EB%86%8D%EB%8F%99/%EC%B2%AD%EB%9F%89%EB%A6%AC%EC%97%AD/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://ganda-go.com/seoul/%EB%8F%99%EB%8C%80%EB%AC%B8%EA%B5%AC/%EC%A0%84%EB%86%8D%EB%8F%99/%ED%9A%8C%EA%B8%B0%EC%97%AD/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://ganda-go.com/seoul/%EB%8F%99%EB%8C%80%EB%AC%B8%EA%B5%AC/%EC%A0%84%EB%86%8D%EB%8F%99/%EC%99%B8%EB%8C%80%EC%95%9E%EC%97%AD/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://ganda-go.com/seoul/%EB%8F%99%EB%8C%80%EB%AC%B8%EA%B5%AC/%EC%A0%84%EB%86%8D%EB%8F%99/%EC%98%A4%ED%94%BC%EC%8A%A4%ED%85%94/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://ganda-go.com/seoul/%EB%8F%99%EB%8C%80%EB%AC%B8%EA%B5%AC/%EC%A0%84%EB%86%8D%EB%8F%99/%EC%9B%90%EB%A3%B8/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://ganda-go.com/seoul/%EB%8F%99%EB%8C%80%EB%AC%B8%EA%B5%AC/%EC%A0%84%EB%86%8D%EB%8F%99/%EC%95%84%ED%8C%8C%ED%8A%B8/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://ganda-go.com/seoul/%EC%A4%91%EB%9E%91%EA%B5%AC/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://ganda-go.com/seoul/%EC%A4%91%EB%9E%91%EA%B5%AC/%EB%A9%B4%EB%AA%A9%EB%8F%99/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://ganda-go.com/seoul/%EC%A4%91%EB%9E%91%EA%B5%AC/%EB%A9%B4%EB%AA%A9%EB%8F%99/%EB%A9%B4%EB%AA%A9%EC%97%AD/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://ganda-go.com/seoul/%EC%A4%91%EB%9E%91%EA%B5%AC/%EB%A9%B4%EB%AA%A9%EB%8F%99/%EC%82%AC%EA%B0%80%EC%A0%95%EC%97%AD/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://ganda-go.com/seoul/%EC%A4%91%EB%9E%91%EA%B5%AC/%EB%A9%B4%EB%AA%A9%EB%8F%99/%EC%83%81%EB%B4%89%EC%97%AD/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://ganda-go.com/seoul/%EC%A4%91%EB%9E%91%EA%B5%AC/%EB%A9%B4%EB%AA%A9%EB%8F%99/%EC%98%A4%ED%94%BC%EC%8A%A4%ED%85%94/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://ganda-go.com/seoul/%EC%A4%91%EB%9E%91%EA%B5%AC/%EB%A9%B4%EB%AA%A9%EB%8F%99/%EC%9B%90%EB%A3%B8/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://ganda-go.com/seoul/%EC%A4%91%EB%9E%91%EA%B5%AC/%EB%A9%B4%EB%AA%A9%EB%8F%99/%EC%95%84%ED%8C%8C%ED%8A%B8/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://ganda-go.com/seoul/%EB%85%B8%EC%9B%90%EA%B5%AC/</loc>
@@ -744,6 +814,41 @@
     <loc>https://ganda-go.com/seoul/%EB%8F%84%EB%B4%89%EA%B5%AC/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://ganda-go.com/seoul/%EB%8F%84%EB%B4%89%EA%B5%AC/%EC%B0%BD%EB%8F%99/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://ganda-go.com/seoul/%EB%8F%84%EB%B4%89%EA%B5%AC/%EC%B0%BD%EB%8F%99/%EC%B0%BD%EB%8F%99%EC%97%AD/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://ganda-go.com/seoul/%EB%8F%84%EB%B4%89%EA%B5%AC/%EC%B0%BD%EB%8F%99/%EC%8C%8D%EB%AC%B8%EC%97%AD/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://ganda-go.com/seoul/%EB%8F%84%EB%B4%89%EA%B5%AC/%EC%B0%BD%EB%8F%99/%EB%B0%A9%ED%95%99%EC%97%AD/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://ganda-go.com/seoul/%EB%8F%84%EB%B4%89%EA%B5%AC/%EC%B0%BD%EB%8F%99/%EC%98%A4%ED%94%BC%EC%8A%A4%ED%85%94/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://ganda-go.com/seoul/%EB%8F%84%EB%B4%89%EA%B5%AC/%EC%B0%BD%EB%8F%99/%EC%9B%90%EB%A3%B8/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://ganda-go.com/seoul/%EB%8F%84%EB%B4%89%EA%B5%AC/%EC%B0%BD%EB%8F%99/%EC%95%84%ED%8C%8C%ED%8A%B8/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://ganda-go.com/seoul/%EA%B0%95%EB%B6%81%EA%B5%AC/</loc>
