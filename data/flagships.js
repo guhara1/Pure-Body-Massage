@@ -15,6 +15,8 @@ import { KONDAE_GU, KONDAE_DONG, KONDAE_REP, KONDAE_SUBS } from "./kondae.js";
 import { SEOCHO_GU, SEOCHO_DONG, SEOCHO_REP, SEOCHO_SUBS } from "./seocho.js";
 import { GANGDONG_GU, GANGDONG_DONG, GANGDONG_REP, GANGDONG_SUBS } from "./gangdong.js";
 import { GANGSEO_GU, GANGSEO_DONG, GANGSEO_REP, GANGSEO_SUBS } from "./gangseo.js";
+import { GWANAK_GU, GWANAK_DONG, GWANAK_REP, GWANAK_SUBS } from "./gwanak.js";
+import { DONGJAK_GU, DONGJAK_DONG, DONGJAK_REP, DONGJAK_SUBS } from "./dongjak.js";
 
 export const FLAGSHIPS = [
   { gu: YEOKSAM_GU, dong: YEOKSAM_DONG, rep: YEOKSAM_REP, subs: YEOKSAM_SUBS },
@@ -28,4 +30,6 @@ export const FLAGSHIPS = [
   { gu: SEOCHO_GU, dong: SEOCHO_DONG, rep: SEOCHO_REP, subs: SEOCHO_SUBS },
   { gu: GANGDONG_GU, dong: GANGDONG_DONG, rep: GANGDONG_REP, subs: GANGDONG_SUBS },
   { gu: GANGSEO_GU, dong: GANGSEO_DONG, rep: GANGSEO_REP, subs: GANGSEO_SUBS },
+  { gu: GWANAK_GU, dong: GWANAK_DONG, rep: GWANAK_REP, subs: GWANAK_SUBS },
+  { gu: DONGJAK_GU, dong: DONGJAK_DONG, rep: DONGJAK_REP, subs: DONGJAK_SUBS },
 ];
