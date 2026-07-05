@@ -13,6 +13,7 @@ import { ITAEWON_GU, ITAEWON_DONG, ITAEWON_REP, ITAEWON_SUBS } from "./itaewon.j
 import { SAMSEONG_GU, SAMSEONG_DONG, SAMSEONG_REP, SAMSEONG_SUBS } from "./samseong.js";
 import { KONDAE_GU, KONDAE_DONG, KONDAE_REP, KONDAE_SUBS } from "./kondae.js";
 import { SEOCHO_GU, SEOCHO_DONG, SEOCHO_REP, SEOCHO_SUBS } from "./seocho.js";
+import { GANGDONG_GU, GANGDONG_DONG, GANGDONG_REP, GANGDONG_SUBS } from "./gangdong.js";
 
 export const FLAGSHIPS = [
   { gu: YEOKSAM_GU, dong: YEOKSAM_DONG, rep: YEOKSAM_REP, subs: YEOKSAM_SUBS },
@@ -24,4 +25,5 @@ export const FLAGSHIPS = [
   { gu: SAMSEONG_GU, dong: SAMSEONG_DONG, rep: SAMSEONG_REP, subs: SAMSEONG_SUBS },
   { gu: KONDAE_GU, dong: KONDAE_DONG, rep: KONDAE_REP, subs: KONDAE_SUBS },
   { gu: SEOCHO_GU, dong: SEOCHO_DONG, rep: SEOCHO_REP, subs: SEOCHO_SUBS },
+  { gu: GANGDONG_GU, dong: GANGDONG_DONG, rep: GANGDONG_REP, subs: GANGDONG_SUBS },
 ];
