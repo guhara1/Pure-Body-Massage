@@ -26,6 +26,10 @@ import { YANGCHEON_GU, YANGCHEON_DONG, YANGCHEON_REP, YANGCHEON_SUBS } from "./y
 import { DONGDAEMUN_GU, DONGDAEMUN_DONG, DONGDAEMUN_REP, DONGDAEMUN_SUBS } from "./dongdaemun.js";
 import { JUNGNANG_GU, JUNGNANG_DONG, JUNGNANG_REP, JUNGNANG_SUBS } from "./jungnang.js";
 import { DOBONG_GU, DOBONG_DONG, DOBONG_REP, DOBONG_SUBS } from "./dobong.js";
+import { GANGBUK_GU, GANGBUK_DONG, GANGBUK_REP, GANGBUK_SUBS } from "./gangbuk.js";
+import { SEONGBUK_GU, SEONGBUK_DONG, SEONGBUK_REP, SEONGBUK_SUBS } from "./seongbuk.js";
+import { JONGNO_GU, JONGNO_DONG, JONGNO_REP, JONGNO_SUBS } from "./jongno.js";
+import { JUNGGU_GU, JUNGGU_DONG, JUNGGU_REP, JUNGGU_SUBS } from "./junggu.js";
 
 export const FLAGSHIPS = [
   { gu: YEOKSAM_GU, dong: YEOKSAM_DONG, rep: YEOKSAM_REP, subs: YEOKSAM_SUBS },
@@ -50,4 +54,8 @@ export const FLAGSHIPS = [
   { gu: DONGDAEMUN_GU, dong: DONGDAEMUN_DONG, rep: DONGDAEMUN_REP, subs: DONGDAEMUN_SUBS },
   { gu: JUNGNANG_GU, dong: JUNGNANG_DONG, rep: JUNGNANG_REP, subs: JUNGNANG_SUBS },
   { gu: DOBONG_GU, dong: DOBONG_DONG, rep: DOBONG_REP, subs: DOBONG_SUBS },
+  { gu: GANGBUK_GU, dong: GANGBUK_DONG, rep: GANGBUK_REP, subs: GANGBUK_SUBS },
+  { gu: SEONGBUK_GU, dong: SEONGBUK_DONG, rep: SEONGBUK_REP, subs: SEONGBUK_SUBS },
+  { gu: JONGNO_GU, dong: JONGNO_DONG, rep: JONGNO_REP, subs: JONGNO_SUBS },
+  { gu: JUNGGU_GU, dong: JUNGGU_DONG, rep: JUNGGU_REP, subs: JUNGGU_SUBS },
 ];
